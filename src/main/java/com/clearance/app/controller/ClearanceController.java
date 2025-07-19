@@ -5,6 +5,7 @@ package com.clearance.app.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class ClearanceController {
@@ -16,9 +17,14 @@ public class ClearanceController {
     }
 
     @GetMapping("/add-new-clearance")
-    public String addNewClearance(Model model){
+    public String addNewClearancePage(Model model){
 
         model.addAttribute("pageTitle", "add-new-clearance-Page");
         return "add-new-clearance";
+    }
+
+    @PostMapping("/add-new-clearance")
+    public String addNewClearance(){
+        return "redirect:/clearance";
     }
 }

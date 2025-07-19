@@ -16,12 +16,19 @@
    
 
 
-
+    <form th:action="@{/add-new-clearance}" method="post">
     <table class="clearance-table">
         <tbody>
         <tr>
             <td>Name</td>
-            <td>here select2 list of employees</td>
+            <td>
+                <input list="employeesList" name="employee" id="employeeId" />
+                    <datalist id="employeesList">
+                        <option value="A01">Ali</option>
+                        <option value="A02">Mohammed</option>
+                        <option value="A03">Yasmin</option>
+                    </datalist>
+            </td>
         </tr>
         <tr>
             <td>Last Working Date</td>
@@ -31,6 +38,7 @@
         </tr>
         </tbody>
     </table>
+    </form>
 
     </div><!--end col-->
 

@@ -4,6 +4,7 @@ package com.clearance.app.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -12,6 +13,10 @@ public class Clearance {
 
     @Id
     private String id;
+
+    private String code;
+
+    private LocalDate lastWorkingDate;
 
     private String badgeNumber; //the employee exit from the company
 
@@ -80,5 +85,21 @@ public class Clearance {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public LocalDate getLastWorkingDate() {
+        return lastWorkingDate;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public void setLastWorkingDate(LocalDate lastWorkingDate) {
+        this.lastWorkingDate = lastWorkingDate;
     }
 }

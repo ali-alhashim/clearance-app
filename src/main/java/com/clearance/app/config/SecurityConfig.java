@@ -13,7 +13,8 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login","custom-login", "/verify-otp", "/css/**", "/js/**", "/images/**").permitAll()
-                        .anyRequest().authenticated()
+                        //.anyRequest().authenticated()
+                        .anyRequest().permitAll() //for dev to open without login
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
