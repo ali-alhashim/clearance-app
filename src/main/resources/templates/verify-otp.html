@@ -2,24 +2,29 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>Verify OTP - Clearance App</title>
+  <link rel="stylesheet" href="/css/login.css" />
 </head>
-<body>
-<h2>Enter the OTP</h2>
+<body class="login-body">
 
-<p>We have sent a 6-digit OTP to your email: <strong th:text="${email}"></strong></p>
+<div class="login-container">
+  <h2>Enter the OTP</h2>
 
-<form th:action="@{/verify-otp}" method="post">
-  <input type="hidden" name="email" th:value="${email}" />
+  <p>We have sent a 6-digit OTP to your email: <strong th:text="${email}"></strong></p>
 
+  <form th:action="@{/verify-otp}" method="post" class="login-form">
+    <input type="hidden" name="email" th:value="${email}" />
 
-  <label for="otp">OTP:</label>
-  <input type="text" id="otp" name="otp" maxlength="6" required />
+    <label for="otp">OTP:</label>
+    <input type="text" id="otp" name="otp" maxlength="6" required />
 
-  <button type="submit">Verify</button>
-</form>
+    <button type="submit" class="button">Verify</button>
+  </form>
 
-<div th:if="${error}">
-  <p style="color: red;" th:text="${error}"></p>
+  <div th:if="${error}" class="error-message">
+    <p th:text="${error}"></p>
+  </div>
 </div>
+
 </body>
 </html>
+

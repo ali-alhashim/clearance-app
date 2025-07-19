@@ -1,14 +1,55 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head}"></head>
+<head th:replace="~{fragments/layout :: head}">
+</head>
+<link rel="stylesheet" href="/css/style.css" />
 <body>
 
+<div class="container">
 <div th:replace="~{fragments/layout :: sidebar}"></div>
 
 <main>
-<h2>Clearance Dashboard</h2>
-<p>Welcome to the clearance system.</p>
+
+    <div class="col">
+    <h2 class="page-title">Clearance Dashboard</h2>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+        <label>
+            Search :
+            <input name="search" type="text"/>
+        </label>
+        <a href="/add-new-clearance" class="add-button">Add New</a>
+    </div>
+
+
+
+    <table class="clearance-table">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Badge Number</th>
+            <th>Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>1</td>
+            <td>2025-02-01/1</td>
+            <td>Mohammed Ali Al-Ali</td>
+            <td>A0457</td>
+            <td>PENDING</td>
+        </tr>
+        </tbody>
+    </table>
+
+    </div><!--end col-->
+
+
 </main>
+</div>
 
 </body>
 </html>

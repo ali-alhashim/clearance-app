@@ -1,24 +1,61 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<!--fragment: head-->
 <head th:fragment="head">
   <meta charset="UTF-8">
   <title th:text="${pageTitle}"></title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+    .sidebar {
+      width: 200px;
+      height: 100vh;
+      background-color: #f4f4f4;
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    }
+     .container {
+      display: flex;
+      min-height: 100vh;
+    }
 
+      main {
+      flex-grow: 1;
+      padding: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sidebar ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    .sidebar ul li {
+      margin: 10px 0;
+    }
+    .sidebar ul li a {
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+      display: block;
+      padding: 8px;
+      border-radius: 4px;
+    }
+    .sidebar ul li a:hover {
+      background-color: #ddd;
+    }
+  </style>
 </head>
 
-<body>
 
-<div th:fragment="sidebar">
+
+<div class="sidebar" th:fragment="sidebar">
   <ul>
-    <li>1</li>
-    <li>1</li>
-    <li>1</li>
-    <li>1</li>
+    <li><a th:href="@{/clearance}">Clearance</a></li>
+    <li><a th:href="@{/users}">Users</a></li>
+    <li><a th:href="@{/employees}">Employees</a></li>
+    <li><a th:href="@{/logs}">Logs</a></li>
   </ul>
 </div>
 
-
-</body>
-</html>

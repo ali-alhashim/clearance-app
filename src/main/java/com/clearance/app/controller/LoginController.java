@@ -136,6 +136,8 @@ public class LoginController {
 
         session.setAttribute("user", user);
 
+        model.addAttribute("pageTitle", "Clearance Page");
+
         return "redirect:/clearance";
     }
 
