@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class UsersController {
@@ -72,6 +73,68 @@ public class UsersController {
         newUser.setEmail(userDto.getEmail());
         newUser.setRole(userDto.getRole());
         appUserRepository.save(newUser);
+        return "redirect:/users";
+    }
+
+    //update or delete user
+    @GetMapping("/user")
+    public String userPage(@RequestParam String email, @ModelAttribute UserDto userDto, RedirectAttributes redirectAttributes)
+    {
+        if(email.isEmpty())
+        {
+            redirectAttributes.addAttribute("error", "User Email is Required !");
+            return "redirect:/users";
+        }
+
+        AppUser user = appUserRepository.findByEmail(email).orElse(null);
+
+        if(user ==null)
+        {
+            redirectAttributes.addAttribute("error", "User Email Not Exist !");
+            return "redirect:/users";
+        }
+
+        userDto.setManager(user.isManager());
+        userDto.setEmail(user.getEmail());
+        userDto.setDepartment(user.getDepartment());
+        userDto.setRole(user.getRole());
+        userDto.setName(user.getName());
+        return "edit-user";
+    }
+
+    @PostMapping("/edit-user")
+    public String updateUser(@ModelAttribute UserDto userDto, RedirectAttributes redirectAttributes)
+    {
+
+        AppUser user = appUserRepository.findByEmail(userDto.getEmail()).orElse(null);
+
+        if(user ==null)
+        {
+            redirectAttributes.addAttribute("error", "User Email Not Exist !");
+            return "redirect:/users";
+        }
+
+        return "redirect:/users";
+    }
+
+    @GetMapping("/user-delete")
+    public String deleteUser(@RequestParam String email, RedirectAttributes redirectAttributes)
+    {
+        if(email.isEmpty())
+        {
+            redirectAttributes.addAttribute("error", "User Email is Required !");
+            return "redirect:/users";
+        }
+
+        AppUser user = appUserRepository.findByEmail(email).orElse(null);
+
+        if(user ==null)
+        {
+            redirectAttributes.addAttribute("error", "User Email Not Exist !");
+            return "redirect:/users";
+        }
+
+        appUserRepository.delete(user);
         return "redirect:/users";
     }
 }

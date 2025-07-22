@@ -42,7 +42,9 @@
                 <tr th:each="user, index: ${users}">
                     <td th:text="${index.count}"></td>
                     <td th:text="${user.name}"></td>
-                    <td th:text="${user.email}"></td>
+                    <td>
+                        <a class="badge" th:href="@{/user(email=${user.email})}" th:text="${user.email}"></a>
+                    </td>
                     <td th:text="${user.department}"></td>
                     <td th:text="${user.role}"></td>
                     <td th:text="${user.manager ? 'Yes' : 'No'}"></td>
