@@ -13,6 +13,9 @@
         <div class="col">
             <h2 class="page-title">Employees</h2>
 
+            <div th:if="${error}" class="error-message">
+                <p th:text="${error}"></p>
+            </div>
             <!-- Toolbar -->
             <div class="toolbar">
 
@@ -22,6 +25,26 @@
                 </form>
 
                 <a href="/add-new-employee" class="add-button">Add New</a>
+
+                <button onclick="selectCSV()" title="[badgeNumber, name, arabicName, email, department, location, jobTitle]"  class="import-button">Import Employees CSV</button>
+                <form th:action="@{/import-employees}" method="post" id="csvForm" enctype="multipart/form-data">
+                    <input type="file" name="csv" style="display: none" id="csvFile"/>
+                </form>
+                <script>
+                    function selectCSV()
+                    {
+                       const csvForm = document.getElementById("csvForm");
+                       const csvFile = document.getElementById("csvFile");
+
+
+                        csvFile.onchange = () => {
+                            csvForm.submit();
+                        };
+                       csvFile.click();
+
+                    }
+                </script>
+
             </div>
 
 

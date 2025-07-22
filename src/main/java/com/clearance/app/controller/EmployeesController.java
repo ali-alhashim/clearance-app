@@ -15,6 +15,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class EmployeesController {
@@ -30,14 +38,20 @@ public class EmployeesController {
 
         try {
 
-            if (keyword != null && !keyword.isEmpty()) {
+            if (keyword != null && !keyword.isEmpty())
+            {
+                System.out.println("User want to search for employee with keyword:"+ keyword);
                 employeesPage = employeeRepository.findByKeyword(keyword, PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "badgeNumber")));
-            } else {
+            }
+            else
+            {
+                System.out.println("User want to view employees no search");
                 Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "badgeNumber"));
                 employeesPage = employeeRepository.findAll(pageable);
             }
-        } catch (Exception ex) {
-            // Likely collection does not exist yet
+        } catch (Exception ex)
+        {
+            System.out.println("Likely collection [employees] does not exist yet");
             employeesPage = Page.empty(PageRequest.of(page, size));
         }
 
@@ -76,6 +90,72 @@ public class EmployeesController {
 
         return "redirect:/employees";
     }
+
+
+    @PostMapping("/import-employees")
+    public String importEmployees(@RequestParam("csv") MultipartFile csvFile, RedirectAttributes redirectAttributes) {
+        System.out.println("User wnat to import employees list with csv file");
+        if (csvFile.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "CSV file is empty.");
+            return "redirect:/employees";
+        }
+
+        List<Employee> employees = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(csvFile.getInputStream(), StandardCharsets.UTF_8)))
+        {
+            String headerLine = reader.readLine();
+
+            if (headerLine == null) {
+                redirectAttributes.addFlashAttribute("error", "CSV file is missing header.");
+                return "redirect:/employees";
+            }
+
+            String[] headers = headerLine.split(",");
+            String[] expectedHeaders = {
+                    "badgeNumber", "name", "arabicName", "email", "department", "location", "jobTitle"
+            };
+
+            for (int i = 0; i < expectedHeaders.length; i++) {
+                if (headers.length <= i || !headers[i].trim().equalsIgnoreCase(expectedHeaders[i])) {
+                    redirectAttributes.addFlashAttribute("error", "CSV file columns do not match expected format: [badgeNumber, name, arabicName, email, department, location, jobTitle]");
+                    return "redirect:/employees";
+                }
+            }
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.trim().isEmpty()) continue; // Skip empty lines
+
+                String[] fields = line.split(",", -1); // -1 includes trailing empty strings
+
+                if (fields.length < 7) continue; // skip malformed rows
+
+                Employee employee = new Employee();
+                employee.setBadgeNumber(fields[0].trim());
+                employee.setName(fields[1].trim());
+                employee.setArName(fields[2].trim());
+                employee.setEmail(fields[3].trim());
+                employee.setDepartment(fields[4].trim());
+                employee.setLocation(fields[5].trim());
+                employee.setJobTitle(fields[6].trim());
+
+                employees.add(employee);
+
+            }
+            System.out.println("Save All employees to Database");
+            employeeRepository.saveAll(employees);
+
+
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Error importing CSV: " + e.getMessage());
+        }
+
+        return "redirect:/employees";
+    }
+
 
 
 }
