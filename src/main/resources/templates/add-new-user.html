@@ -40,8 +40,8 @@
                     <tr>
                         <td>Department</td>
                         <td>
-                            <input list="purchasingList" type="text" name="department" th:field="*{department}"/>
-                            <datalist id="purchasingList">
+                            <select name="department" th:field="*{department}">
+
                                 <option value="IT">IT</option>
                                 <option value="HR">HR</option>
                                 <option value="SECURITY">SECURITY</option>
@@ -52,7 +52,8 @@
                                 <option value="CUSTOMER-SERVICE">CUSTOMER-SERVICE</option>
                                 <option value="SALES">SALES</option>
                                 <option value="FINANCE">FINANCE</option>
-                            </datalist>
+                                <option value="MOBILE">MOBILE</option>
+                          </select>
                         </td>
                     </tr>
 

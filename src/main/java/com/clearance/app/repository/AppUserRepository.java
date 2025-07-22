@@ -2,6 +2,8 @@ package com.clearance.app.repository;
 
 import com.clearance.app.model.AppUser;
 import org.springframework.data.mongodb.repository.MongoRepository;
+
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +13,12 @@ import org.springframework.data.repository.query.Param;
 
 public interface AppUserRepository extends MongoRepository<AppUser, String> {
     Optional<AppUser> findByEmail(String email);
+
+    List<AppUser> findByRole(String role);
+
+    List<AppUser> findByDepartment(String department);
+
+    List<AppUser> findByIsManager(boolean isManager);
 
     @Query("{ '$or': [ " +
             "  { 'name': { $regex: ?0, $options: 'i' } }, " +

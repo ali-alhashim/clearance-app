@@ -72,6 +72,19 @@
             </td>
         </tr>
 
+
+        <tr>
+            <td>HR Department</td>
+            <td>
+                <input list="hrList" type="text" name="hrDepartment" th:field="*{hrEmail}"/>
+                <datalist id="hrList">
+                    <option th:each="user : ${hr}"
+                            th:value="${user.email}"
+                            th:text="${user.name}"></option>
+                </datalist>
+            </td>
+        </tr>
+
         <tr>
             <td>Accounts Department</td>
             <td>
@@ -90,9 +103,9 @@
             <td>
                 <input list="purchasingList" type="text" name="purchasingDepartment" th:field="*{purchasingEmail}"/>
                 <datalist id="purchasingList">
-                    <option value="A01">Ali</option>
-                    <option value="A02">Mohammed</option>
-                    <option value="A03">Yasmin</option>
+                    <option th:each="user : ${purchasing}"
+                            th:value="${user.email}"
+                            th:text="${user.name}"></option>
                 </datalist>
             </td>
         </tr>
@@ -102,9 +115,9 @@
             <td>
                 <input list="customerServiceList" type="text" name="customerServiceDepartment" th:field="*{customerEmail}"/>
                 <datalist id="customerServiceList">
-                    <option value="A01">Ali</option>
-                    <option value="A02">Mohammed</option>
-                    <option value="A03">Yasmin</option>
+                    <option th:each="user : ${customerService}"
+                            th:value="${user.email}"
+                            th:text="${user.name}"></option>
                 </datalist>
             </td>
         </tr>
@@ -115,9 +128,9 @@
             <td>
                 <input list="mobileSIMList" type="text" name="mobileSIMDepartment" th:field="*{mobileEmail}"/>
                 <datalist id="mobileSIMList">
-                    <option value="A01">Ali</option>
-                    <option value="A02">Mohammed</option>
-                    <option value="A03">Yasmin</option>
+                    <option th:each="user : ${mobileSIM}"
+                            th:value="${user.email}"
+                            th:text="${user.name}"></option>
                 </datalist>
             </td>
         </tr>
@@ -127,9 +140,9 @@
             <td>
                 <input list="companyVehicleList" type="text" name="companyVehicleDepartment" th:field="*{vehicleEmail}"/>
                 <datalist id="companyVehicleList">
-                    <option value="A01">Ali</option>
-                    <option value="A02">Mohammed</option>
-                    <option value="A03">Yasmin</option>
+                    <option th:each="user : ${companyVehicle}"
+                            th:value="${user.email}"
+                            th:text="${user.name}"></option>
                 </datalist>
             </td>
         </tr>
@@ -139,9 +152,9 @@
             <td>
                 <input list="securityList" type="text" name="securityDepartment" th:field="*{securityEmail}"/>
                 <datalist id="securityList">
-                    <option value="A01">Ali</option>
-                    <option value="A02">Mohammed</option>
-                    <option value="A03">Yasmin</option>
+                    <option th:each="user : ${security}"
+                            th:value="${user.email}"
+                            th:text="${user.name}"></option>
                 </datalist>
             </td>
         </tr>
@@ -152,9 +165,9 @@
             <td>
                 <input list="ityList" type="text" name="itDepartment" th:field="*{itEmail}"/>
                 <datalist id="ityList">
-                    <option value="A01">Ali</option>
-                    <option value="A02">Mohammed</option>
-                    <option value="A03">Yasmin</option>
+                    <option th:each="user : ${its}"
+                            th:value="${user.email}"
+                            th:text="${user.name}"></option>
                 </datalist>
             </td>
         </tr>
@@ -164,9 +177,9 @@
             <td>
                 <input list="medicalInsuranceList" type="text" name="medicalInsurance" th:field="*{insuranceEmail}"/>
                 <datalist id="medicalInsuranceList">
-                    <option value="A01">Ali</option>
-                    <option value="A02">Mohammed</option>
-                    <option value="A03">Yasmin</option>
+                    <option th:each="user : ${medicalInsurance}"
+                            th:value="${user.email}"
+                            th:text="${user.name}"></option>
                 </datalist>
             </td>
         </tr>
@@ -176,9 +189,9 @@
             <td>
                 <input list="salesAndMarketingList" type="text" name="salesAndMarketing" th:field="*{salesEmail}"/>
                 <datalist id="salesAndMarketingList">
-                    <option value="A01">Ali</option>
-                    <option value="A02">Mohammed</option>
-                    <option value="A03">Yasmin</option>
+                    <option th:each="user : ${salesAndMarketing}"
+                            th:value="${user.email}"
+                            th:text="${user.name}"></option>
                 </datalist>
             </td>
         </tr>
@@ -188,9 +201,9 @@
             <td>
                 <input list="financeList" type="text" name="finance" th:field="*{financeEmail}"/>
                 <datalist id="financeList">
-                    <option value="A01">Ali</option>
-                    <option value="A02">Mohammed</option>
-                    <option value="A03">Yasmin</option>
+                    <option th:each="user : ${finance}"
+                            th:value="${user.email}"
+                            th:text="${user.name}"></option>
                 </datalist>
             </td>
         </tr>

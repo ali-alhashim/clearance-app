@@ -24,6 +24,7 @@ public class ClearanceDto {
     private String insuranceEmail;
     private String salesEmail;
     private String financeEmail;
+    private String hrEmail;
 
     public String getBadgeNumber() {
         return badgeNumber;
@@ -127,5 +128,13 @@ public class ClearanceDto {
 
     public void setFinanceEmail(String financeEmail) {
         this.financeEmail = financeEmail;
+    }
+
+    public String getHrEmail() {
+        return hrEmail;
+    }
+
+    public void setHrEmail(String hrEmail) {
+        this.hrEmail = hrEmail;
     }
 }

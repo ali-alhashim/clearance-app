@@ -7,7 +7,10 @@ import java.util.List;
 
 public interface ClearanceRepository extends MongoRepository<Clearance, String> {
 
-    List<Clearance> findByCreatedByUserId(String userId);
+    List<Clearance> findByCreatedByUserEmail(String email);
 
     List<Clearance> findByBadgeNumber(String employeeId);
+
+    List<Clearance> findByCodeStartingWith(String prefix);
+
 }
