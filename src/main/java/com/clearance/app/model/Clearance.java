@@ -19,8 +19,12 @@ public class Clearance {
     private LocalDate lastWorkingDate;
 
     private String badgeNumber; //the employee exit from the company
+    private String name;
+    private String arName;
+    private String department;
+    private String jobTitle;
 
-    private String createdByUserId; // HR user who created this
+    private String createdByUserEmail; // HR user who created this
 
     private LocalDateTime createdAt;
 
@@ -39,9 +43,7 @@ public class Clearance {
         return badgeNumber;
     }
 
-    public String getCreatedByUserId() {
-        return createdByUserId;
-    }
+
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
@@ -67,9 +69,7 @@ public class Clearance {
         this.badgeNumber = badgeNumber;
     }
 
-    public void setCreatedByUserId(String createdByUserId) {
-        this.createdByUserId = createdByUserId;
-    }
+
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
@@ -101,5 +101,45 @@ public class Clearance {
 
     public void setLastWorkingDate(LocalDate lastWorkingDate) {
         this.lastWorkingDate = lastWorkingDate;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getArName() {
+        return arName;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public String getJobTitle() {
+        return jobTitle;
+    }
+
+    public String getCreatedByUserEmail() {
+        return createdByUserEmail;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setArName(String arName) {
+        this.arName = arName;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public void setJobTitle(String jobTitle) {
+        this.jobTitle = jobTitle;
+    }
+
+    public void setCreatedByUserEmail(String createdByUserEmail) {
+        this.createdByUserEmail = createdByUserEmail;
     }
 }

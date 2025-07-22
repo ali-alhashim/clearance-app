@@ -4,18 +4,30 @@ import java.time.LocalDateTime;
 
 public class Approval {
 
-    private String approverUserId; // department manager's user id
+    private String approvalEmail; // Approval Email
 
-    private boolean approved;
+    private String name;          // Approval Name
 
-    private String note; // note added by manager
+    private String department;     // approval department
 
-    private LocalDateTime approvedAt;
+    private boolean approved;      // status for the approval
 
-    private String otpCode; // OTP pending or confirmed
+    private String note; // note added by approval
 
-    public String getApproverUserId() {
-        return approverUserId;
+    private LocalDateTime approvedAt; // date for approval
+
+    private String otpCode; // OTP sent for approval
+
+    public String getApprovalEmail() {
+        return approvalEmail;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDepartment() {
+        return department;
     }
 
     public boolean isApproved() {
@@ -34,8 +46,16 @@ public class Approval {
         return otpCode;
     }
 
-    public void setApproverUserId(String approverUserId) {
-        this.approverUserId = approverUserId;
+    public void setApprovalEmail(String approvalEmail) {
+        this.approvalEmail = approvalEmail;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
     }
 
     public void setApproved(boolean approved) {
