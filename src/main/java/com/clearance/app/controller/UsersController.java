@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -113,6 +114,17 @@ public class UsersController {
             redirectAttributes.addAttribute("error", "User Email Not Exist !");
             return "redirect:/users";
         }
+
+        user.setDepartment(userDto.getDepartment());
+        user.setName(userDto.getName());
+
+
+        user.setManager(userDto.isManager());
+        user.setEmail(userDto.getEmail());
+        user.setRole(userDto.getRole());
+
+        appUserRepository.save(user);
+
 
         return "redirect:/users";
     }
