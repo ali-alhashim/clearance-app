@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head}">
+</head>
+<link rel="stylesheet" href="/css/style.css" />
+<body>
+
+<div class="container">
+    <div th:replace="~{fragments/layout :: sidebar}"></div>
+
+    <main>
+
+        <div class="col">
+            <h2 class="page-title">Employees</h2>
+
+            <!-- Toolbar -->
+            <div class="toolbar">
+
+                <form th:action="@{/employees}" method="get">
+                    <input type="text" name="keyword" th:value="${keyword}" placeholder="Search users..." />
+                    <button type="submit">Search</button>
+                </form>
+
+                <a href="/add-new-employee" class="add-button">Add New</a>
+            </div>
+
+
+
+            <table class="clearance-table">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Badge Number</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Department</th>
+                    <th>Location</th>
+                    <th>Job Title</th>
+
+
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Handle case when there are no employees -->
+                <tr th:if="${employees.content.size() == 0}">
+                    <td colspan="7">No employees found.</td>
+                </tr>
+
+                <!-- Loop through employees when available -->
+                <tr th:each="employee, index : ${employees}">
+                    <td th:text="${index.count}"></td>
+                    <td th:text="${employee.badgeNumber}"></td>
+                    <td th:text="${employee.name}"></td>
+                    <td th:text="${employee.email}"></td>
+                    <td th:text="${employee.department}"></td>
+                    <td th:text="${employee.location}"></td>
+                    <td th:text="${employee.jobTitle}"></td>
+                </tr>
+                </tbody>
+            </table>
+
+
+
+            <div>
+                <span th:text="'Page ' + ${employees.number + 1} + ' of ' + ${employees.totalPages}"></span>
+
+                <a th:href="@{/employees(page=${employees.number - 1}, size=${employees.size}, keyword=${keyword})}"
+                   th:if="${employees.hasPrevious()}">Previous</a>
+
+                <a th:href="@{/employees(page=${employees.number + 1}, size=${employees.size}, keyword=${keyword})}"
+                   th:if="${employees.hasNext()}">Next</a>
+            </div>
+
+        </div><!--end col-->
+
+
+    </main>
+</div>
+
+
+<script>
+
+    const sidebarSelected = document.getElementById("Employees");
+    if (sidebarSelected) {
+        sidebarSelected.classList.add("sidebar-active");
+    }
+</script>
+
+</body>
+</html>
+
+
+
+
+
+

@@ -12,8 +12,9 @@ public class AppUser {
     private String name;
     private String email;
     private String otpCode;
-    private String role;
-    private String department;
+    private String role;             //USER, ADMIN
+    private String department;       // IT, HR, SECURITY, INSURANCE, VEHICLE, PURCHASING, ACCOUNTS, CUSTOMER-SERVICE, SALES, FINANCE
+    private boolean isManager = false;
     private boolean active;
 
     public String getId() {
@@ -70,5 +71,13 @@ public class AppUser {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isManager() {
+        return isManager;
+    }
+
+    public void setManager(boolean manager) {
+        isManager = manager;
     }
 }

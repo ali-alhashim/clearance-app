@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head}">
+</head>
+<link rel="stylesheet" href="/css/style.css" />
+<body>
+
+<div class="container">
+    <div th:replace="~{fragments/layout :: sidebar}"></div>
+
+    <main>
+
+        <div class="col">
+            <h2 class="page-title">Add New Employee </h2>
+
+
+
+
+            <form th:action="@{/add-new-employee}" method="post" th:object="${employeeDto}">
+                <table class="clearance-table">
+                    <tbody>
+
+
+                    <tr>
+                        <td>Badge Number</td>
+                        <td>
+                            <input  name="badgeNumber" id="badgeNumberId"  th:field="*{badgeNumber}"/>
+
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        <td>Name</td>
+                        <td>
+                            <input  name="userName" id="userNameId"  th:field="*{name}"/>
+
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Arabic Name</td>
+                        <td>
+                            <input  type="text" name="arName" th:field="*{arName}"/>
+                        </td>
+                    </tr>
+
+
+
+
+
+
+                    <tr>
+                        <td>Department</td>
+                        <td>
+                            <input list="purchasingList" type="text" name="department" th:field="*{department}"/>
+                            <datalist id="purchasingList">
+                                <option value="IT">IT</option>
+                                <option value="HR">HR</option>
+                                <option value="SECURITY">SECURITY</option>
+                                <option value="INSURANCE">INSURANCE</option>
+                                <option value="VEHICLE">VEHICLE</option>
+                                <option value="PURCHASING">PURCHASING</option>
+                                <option value="ACCOUNTS">ACCOUNTS</option>
+                                <option value="CUSTOMER-SERVICE">CUSTOMER-SERVICE</option>
+                                <option value="SALES">SALES</option>
+                                <option value="FINANCE">FINANCE</option>
+                            </datalist>
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        <td>Email</td>
+                        <td>
+                            <input  type="email" name="email" th:field="*{email}"/>
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        <td>Location</td>
+                        <td>
+                            <input  type="text" name="location" th:field="*{location}"/>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Job Title</td>
+                        <td>
+                            <input  type="text" name="jobTitle" th:field="*{jobTitle}"/>
+                        </td>
+                    </tr>
+
+
+
+
+
+
+
+
+
+                    <tr>
+                        <td colspan="2">
+                            <button type="submit">Submit</button>
+                        </td>
+                    </tr>
+
+
+
+                    </tbody>
+                </table>
+            </form>
+
+        </div><!--end col-->
+
+
+    </main>
+</div>
+
+
+<script>
+
+    const sidebarSelected = document.getElementById("Users");
+    if (sidebarSelected) {
+        sidebarSelected.classList.add("sidebar-active");
+    }
+</script>
+
+</body>
+</html>
+
+
+
+
+
+

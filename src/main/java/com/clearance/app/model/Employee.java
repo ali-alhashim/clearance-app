@@ -12,9 +12,11 @@ public class Employee {
 
     private String badgeNumber;
 
-    private String fullName;
+    private String location;
 
-    private String arFullName;
+    private String name;
+
+    private String arName;
 
     private String department;
 
@@ -32,13 +34,7 @@ public class Employee {
         return badgeNumber;
     }
 
-    public String getFullName() {
-        return fullName;
-    }
 
-    public String getArFullName() {
-        return arFullName;
-    }
 
     public String getDepartment() {
         return department;
@@ -64,13 +60,7 @@ public class Employee {
         this.badgeNumber = badgeNumber;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
 
-    public void setArFullName(String arFullName) {
-        this.arFullName = arFullName;
-    }
 
     public void setDepartment(String department) {
         this.department = department;
@@ -86,5 +76,29 @@ public class Employee {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getArName() {
+        return arName;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setArName(String arName) {
+        this.arName = arName;
     }
 }

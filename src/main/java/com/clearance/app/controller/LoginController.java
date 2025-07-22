@@ -122,6 +122,8 @@ public class LoginController {
             user.setName("Administrator");
             user.setEmail(email);
             user.setRole("ADMIN");
+            user.setManager(true);
+            user.setDepartment("Administrator");
             appUserRepository.save(user);
         }
 

@@ -17,7 +17,7 @@
     <div class="toolbar">
         <label>
             Search :
-            <input name="search" type="text"/>
+            <input name="keyword" type="text"/>
         </label>
         <a href="/add-new-clearance" class="add-button">Add New</a>
     </div>
@@ -50,6 +50,15 @@
 
 </main>
 </div>
+
+
+<script>
+
+    const sidebarSelected = document.getElementById("Clearance");
+    if (sidebarSelected) {
+        sidebarSelected.classList.add("sidebar-active");
+    }
+</script>
 
 </body>
 </html>
