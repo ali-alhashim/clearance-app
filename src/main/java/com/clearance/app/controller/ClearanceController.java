@@ -2,6 +2,7 @@ package com.clearance.app.controller;
 
 
 
+import com.clearance.app.config.AppConfig;
 import com.clearance.app.dto.ClearanceDto;
 import com.clearance.app.model.AppUser;
 import com.clearance.app.model.Approval;
@@ -11,14 +12,20 @@ import com.clearance.app.repository.AppUserRepository;
 import com.clearance.app.repository.ClearanceRepository;
 import com.clearance.app.repository.EmployeeRepository;
 import com.clearance.app.service.ClearanceService;
+import com.clearance.app.service.NotificationEmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
@@ -40,8 +47,29 @@ public class ClearanceController {
     @Autowired
     ClearanceRepository clearanceRepository;
 
+    @Autowired
+    NotificationEmailService notificationEmailService;
+
+    @Autowired
+    private AppConfig appConfig;
+
     @GetMapping({"/", "/clearance"})
-    public String clearance(Model model) {
+    public String clearance(Model model, @RequestParam(required = false) String keyword, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size)
+    {
+        Page<Clearance> clearancesPage;
+        if(keyword !=null && !keyword.isEmpty())
+        {
+
+            clearancesPage = clearanceRepository.findByKeyword(keyword, PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "code")));
+        }
+        else
+        {
+
+            Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "code"));
+            clearancesPage = clearanceRepository.findAll(pageable);
+        }
+
+        model.addAttribute("clearances", clearancesPage);
         model.addAttribute("pageTitle", "Clearance-Page");
         return "clearance";
     }
@@ -293,6 +321,28 @@ public class ClearanceController {
 
         clearanceRepository.save(clearance);
 
+        String clearanceLink = appConfig.getBaseUrl() + "/clearance-view?code=" + clearance.getCode();
+
+
+        for (Approval approval : approvals) {
+            notificationEmailService.sendApprovalEmail(approval.getApprovalEmail(), clearance.getCode(), clearanceLink);
+        }
+
         return "redirect:/clearance";
+    }
+
+
+    @GetMapping("/clearance-view")
+    public String clearanceView(@RequestParam String code, RedirectAttributes redirectAttributes, Model model)
+    {
+        Clearance clearance = clearanceRepository.findByCode(code).orElse(null);
+        if(clearance ==null)
+        {
+            redirectAttributes.addAttribute("error", "The Clearance Code not Exist !");
+            return "redirect:/clearance";
+        }
+
+        model.addAttribute("clearance", clearance);
+        return "clearance-view";
     }
 }

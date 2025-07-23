@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head}"></head>
+<link rel="stylesheet" href="/css/style.css" />
+<body>
+
+<div class="container">
+    <div th:replace="~{fragments/layout :: sidebar}"></div>
+
+    <main>
+        <div class="col">
+            <h2 class="page-title">Clearance <span th:text="${clearance.code}">CODE</span></h2>
+
+            <div th:if="${error}" class="error-message">
+                <p th:text="${error}"></p>
+            </div>
+
+            <div class="info-block">
+                <p><strong>Employee:</strong> <span th:text="${clearance.name}">Employee Name</span> - <span th:text="${clearance.arName}"></span></p>
+                <p><strong>Badge:</strong> <span th:text="${clearance.badgeNumber}">Badge</span></p>
+                <p><strong>Department:</strong> <span th:text="${clearance.department}">Dept</span></p>
+                <p><strong>Last Working Date:</strong> <span th:text="${clearance.lastWorkingDate}">lastWorkingDate</span></p>
+                <p><strong>Job Title:</strong> <span th:text="${clearance.jobTitle}">Job</span></p>
+                <p><strong>Created:</strong> <span th:text="${#temporals.format(clearance.createdAt, 'yyyy-MM-dd HH:mm')}">Date</span></p>
+                <p><strong>Created By:</strong> <span th:text="${clearance.createdByUserEmail}">createdByUserEmail</span></p>
+            </div>
+
+            <table class="clearance-table">
+                <thead>
+                <tr>
+                    <th>Department</th>
+                    <th>Approver</th>
+                    <th>Email</th>
+                    <th>Note</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="approval : ${clearance.approvals}">
+                    <td th:text="${approval.department}">Dept</td>
+                    <td th:text="${approval.name}">Name</td>
+                    <td th:text="${approval.approvalEmail}">Email</td>
+                    <td th:text="${approval.note}">note</td>
+                    <td th:text="${approval.approved}">approved</td>
+                </tr>
+                </tbody>
+            </table>
+
+
+            <form th:action="@{/approve-clearance}" method="post">
+                <input type="hidden" name="clearanceCode" th:value="${clearance.code}" />
+
+                <input type="text" name="note" placeholder="Enter your note ...." />
+                <button class="add-button">Approve</button>
+            </form>
+
+        </div>
+    </main>
+</div>
+
+<script>
+    const sidebarSelected = document.getElementById("Clearance");
+    if (sidebarSelected) {
+        sidebarSelected.classList.add("sidebar-active");
+    }
+</script>
+
+</body>
+</html>

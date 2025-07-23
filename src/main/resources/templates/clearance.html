@@ -38,15 +38,32 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <td>1</td>
-            <td>2025-02-01/1</td>
-            <td>Mohammed Ali Al-Ali</td>
-            <td>A0457</td>
-            <td>PENDING</td>
+
+        <tr th:each="clearance, index :${clearances}">
+            <td th:text="${index.count}"></td>
+            <td>
+                <a class="badge" th:href="@{/clearance-view(code=${clearance.code})}" th:text="${clearance.code}"></a>
+            </td>
+
+            <td th:text="${clearance.name}"></td>
+            <td th:text="${clearance.badgeNumber}"></td>
+            <td th:text="${clearance.status}"></td>
         </tr>
+
         </tbody>
     </table>
+
+
+
+        <div>
+            <span th:text="'Page ' + ${clearances.number + 1} + ' of ' + ${clearances.totalPages}"></span>
+
+            <a th:href="@{/clearance(page=${clearances.number - 1}, size=${clearances.size}, keyword=${keyword})}"
+               th:if="${clearances.hasPrevious()}">Previous</a>
+
+            <a th:href="@{/clearance(page=${clearances.number + 1}, size=${clearances.size}, keyword=${keyword})}"
+               th:if="${clearances.hasNext()}">Next</a>
+        </div>
 
     </div><!--end col-->
 
