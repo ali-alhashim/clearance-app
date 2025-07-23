@@ -154,4 +154,21 @@ public class Clearance {
     public void setComments(List<Comment> comments) {
         this.comments = comments;
     }
+
+
+    public int getTotalApprovals() {
+        return approvals != null ? approvals.size() : 0;
+    }
+
+    public long getApprovedCount() {
+        return approvals != null ? approvals.stream().filter(Approval::isApproved).count() : 0;
+    }
+
+    public String getApprovalStatusText() {
+        long approved = getApprovedCount();
+        int total = getTotalApprovals();
+        if (total == 0) return "0/0 (0%)";
+        int percentage = (int) ((approved * 100.0) / total);
+        return approved + "/" + total + " (" + percentage + "%)";
+    }
 }
