@@ -109,6 +109,22 @@ public class ClearanceController {
             return "redirect:/add-new-clearance";
         }
 
+        AppUser hrUser = appUserRepository.findByEmail(clearanceDto.getHrEmail()).orElse(null);
+        if(hrUser == null)
+        {
+            redirectAttributes.addAttribute("error", "The HR User not exist !");
+            return "redirect:/add-new-clearance";
+        }
+
+        AppUser managerUser = appUserRepository.findByEmail(clearanceDto.getDirectManagerEmail()).orElse(null);
+        if(managerUser == null)
+        {
+            redirectAttributes.addAttribute("error", "The Direct Manager User not exist !");
+            return "redirect:/add-new-clearance";
+        }
+
+
+
         List<Approval> approvals = new ArrayList<>();
 
         Approval itApproval = new Approval();
@@ -123,11 +139,24 @@ public class ClearanceController {
         accountsApproval.setName(accountsUser.getName());
 
 
+        Approval hrApproval = new Approval();
+        hrApproval.setApprovalEmail(clearanceDto.getHrEmail());
+        hrApproval.setDepartment(hrUser.getDepartment());
+        hrApproval.setName(hrUser.getName());
+
+        Approval managerApproval = new Approval();
+        managerApproval.setApprovalEmail(clearanceDto.getDirectManagerEmail());
+        managerApproval.setDepartment(managerUser.getDepartment());
+        managerApproval.setName(managerUser.getName());
+
+
 
 
 
         approvals.add(itApproval);
         approvals.add(accountsApproval);
+        approvals.add(hrApproval);
+        approvals.add(managerApproval);
 
 
         clearance.setName(employee.getName());
