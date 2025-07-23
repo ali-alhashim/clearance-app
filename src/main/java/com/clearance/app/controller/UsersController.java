@@ -60,9 +60,18 @@ public class UsersController {
     }
 
     @PostMapping("/add-new-user")
-    public String addNewUser(@ModelAttribute UserDto userDto)
+    public String addNewUser(@ModelAttribute UserDto userDto, RedirectAttributes redirectAttributes)
     {
         // only current user with admin role can add new user
+
+        AppUser existEmail = appUserRepository.findByEmail(userDto.getEmail()).orElse(null);
+        if(existEmail !=null)
+        {
+            redirectAttributes.addAttribute("error", "The Email Already Exist !");
+            return "redirect:/add-new-user";
+        }
+
+
         AppUser newUser = new AppUser();
         newUser.setName(userDto.getName());
         newUser.setDepartment(userDto.getDepartment());

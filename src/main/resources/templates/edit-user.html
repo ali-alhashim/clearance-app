@@ -12,6 +12,9 @@
 
         <div class="col">
             <h2 class="page-title">Edit User </h2>
+            <div th:if="${error}" class="error-message">
+                <p th:text="${error}"></p>
+            </div>
 
             <a class="red-button" th:href="@{/user-delete(email=${userDto.email})}" onclick="return confirm('Are you sure you want to delete this user?');">
                 Delete User

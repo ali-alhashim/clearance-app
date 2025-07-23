@@ -12,6 +12,9 @@
 
         <div class="col">
             <h2 class="page-title">Users</h2>
+            <div th:if="${error}" class="error-message">
+                <p th:text="${error}"></p>
+            </div>
 
             <!-- Toolbar -->
             <div class="toolbar">

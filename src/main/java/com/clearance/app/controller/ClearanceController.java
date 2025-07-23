@@ -123,9 +123,124 @@ public class ClearanceController {
             return "redirect:/add-new-clearance";
         }
 
+        boolean isPurchasingApprovalReqiured = true;
+        AppUser purchasingUser = appUserRepository.findByEmail(clearanceDto.getPurchasingEmail()).orElse(null);
+        if(purchasingUser == null)
+        {
+            // no mandatory approval so if no email we will skip this required approval
+            isPurchasingApprovalReqiured = false;
+        }
+
+        boolean isCustomerServiceApprovalReqiurd = true;
+        AppUser customerServiceUser = appUserRepository.findByEmail(clearanceDto.getCustomerEmail()).orElse(null);
+        if(customerServiceUser == null)
+        {
+            // no mandatory approval so if no email we will skip this required approval
+            isCustomerServiceApprovalReqiurd = false;
+        }
+
+        boolean isSalesApprovalReqiurd = true;
+        AppUser salesUser = appUserRepository.findByEmail(clearanceDto.getSalesEmail()).orElse(null);
+        if(salesUser ==null)
+        {
+            isSalesApprovalReqiurd = false;
+        }
+
+        AppUser mobileSIMUser = appUserRepository.findByEmail(clearanceDto.getMobileEmail()).orElse(null);
+        if(mobileSIMUser ==null)
+        {
+            redirectAttributes.addAttribute("error", "The Mobile User not exist !");
+            return "redirect:/add-new-clearance";
+        }
+
+        AppUser companyVehicleUser = appUserRepository.findByEmail(clearanceDto.getVehicleEmail()).orElse(null);
+        if(companyVehicleUser == null)
+        {
+            redirectAttributes.addAttribute("error", "The Company Vehicle User not exist !");
+            return "redirect:/add-new-clearance";
+        }
+
+        AppUser securityUser = appUserRepository.findByEmail(clearanceDto.getSecurityEmail()).orElse(null);
+        if(securityUser ==null)
+        {
+            redirectAttributes.addAttribute("error", "The Security User not exist !");
+            return "redirect:/add-new-clearance";
+        }
+
+        AppUser insuranceUser = appUserRepository.findByEmail(clearanceDto.getInsuranceEmail()).orElse(null);
+        if(insuranceUser ==null)
+        {
+            redirectAttributes.addAttribute("error", "The Insurance User not exist !");
+            return "redirect:/add-new-clearance";
+        }
+
+        AppUser financeUser = appUserRepository.findByEmail(clearanceDto.getFinanceEmail()).orElse(null);
+        if(financeUser == null)
+        {
+            redirectAttributes.addAttribute("error", "The Finance User not exist !");
+            return "redirect:/add-new-clearance";
+        }
+
+
+
 
 
         List<Approval> approvals = new ArrayList<>();
+
+        if(isCustomerServiceApprovalReqiurd)
+        {
+            Approval customerApproval = new Approval();
+            customerApproval.setDepartment(customerServiceUser.getDepartment());
+            customerApproval.setName(customerServiceUser.getName());
+            customerApproval.setApprovalEmail(clearanceDto.getCustomerEmail());
+            approvals.add(customerApproval);
+        }
+
+        if(isPurchasingApprovalReqiured)
+        {
+            Approval purchasingApproval = new Approval();
+            purchasingApproval.setApprovalEmail(clearanceDto.getPurchasingEmail());
+            purchasingApproval.setName(purchasingUser.getName());
+            purchasingApproval.setDepartment(purchasingUser.getDepartment());
+            approvals.add(purchasingApproval);
+        }
+
+        if(isSalesApprovalReqiurd)
+        {
+            Approval salesApproval = new Approval();
+            salesApproval.setApprovalEmail(clearanceDto.getSalesEmail());
+            salesApproval.setName(salesUser.getName());
+            salesApproval.setDepartment(salesUser.getDepartment());
+            approvals.add(salesApproval);
+        }
+
+        Approval financeApproval = new Approval();
+        financeApproval.setApprovalEmail(clearanceDto.getFinanceEmail());
+        financeApproval.setName(financeUser.getName());
+        financeApproval.setDepartment(financeUser.getDepartment());
+
+
+        Approval insuranceApproval = new Approval();
+        insuranceApproval.setApprovalEmail(clearanceDto.getInsuranceEmail());
+        insuranceApproval.setName(insuranceUser.getName());
+        insuranceApproval.setDepartment(insuranceUser.getDepartment());
+
+        Approval securityApproval = new Approval();
+        securityApproval.setApprovalEmail(clearanceDto.getSecurityEmail());
+        securityApproval.setName(securityUser.getName());
+        securityApproval.setDepartment(securityUser.getDepartment());
+
+        Approval companyVehicleApproval = new Approval();
+        companyVehicleApproval.setApprovalEmail(clearanceDto.getVehicleEmail());
+        companyVehicleApproval.setName(companyVehicleUser.getName());
+        companyVehicleApproval.setDepartment(companyVehicleUser.getDepartment());
+
+        Approval mobileSIMApproval = new Approval();
+        mobileSIMApproval.setApprovalEmail(clearanceDto.getMobileEmail());
+        mobileSIMApproval.setName(mobileSIMUser.getName());
+        mobileSIMApproval.setDepartment(mobileSIMUser.getDepartment());
+
+
 
         Approval itApproval = new Approval();
         itApproval.setApprovalEmail(clearanceDto.getItEmail());
@@ -157,6 +272,12 @@ public class ClearanceController {
         approvals.add(accountsApproval);
         approvals.add(hrApproval);
         approvals.add(managerApproval);
+        approvals.add(mobileSIMApproval);
+        approvals.add(companyVehicleApproval);
+        approvals.add(securityApproval);
+        approvals.add(insuranceApproval);
+        approvals.add(financeApproval);
+
 
 
         clearance.setName(employee.getName());

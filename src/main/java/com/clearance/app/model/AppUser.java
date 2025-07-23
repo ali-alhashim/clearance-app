@@ -2,6 +2,7 @@ package com.clearance.app.model;
 
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "users")
@@ -10,7 +11,10 @@ public class AppUser {
     @Id
     private String id;
     private String name;
+
+    @Indexed(unique = true)
     private String email;
+
     private String otpCode;
     private String role;             //USER, ADMIN
     private String department;       // IT, HR, SECURITY, INSURANCE, VEHICLE, PURCHASING, ACCOUNTS, CUSTOMER-SERVICE, SALES, FINANCE

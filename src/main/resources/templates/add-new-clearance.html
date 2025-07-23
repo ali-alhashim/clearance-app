@@ -12,6 +12,9 @@
 
     <div class="col">
     <h2 class="page-title">Add New Clearance </h2>
+        <div th:if="${error}" class="error-message">
+            <p th:text="${error}"></p>
+        </div>
 
    
 
@@ -253,7 +256,7 @@
 
         <tr>
             <td colspan="3">
-                <button type="submit">Submit</button>
+                <button type="submit" class="add-button">Submit</button>
             </td>
         </tr>
 
