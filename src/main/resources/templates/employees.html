@@ -20,8 +20,10 @@
             <div class="toolbar">
 
                 <form th:action="@{/employees}" method="get">
+                    <div class="row">
                     <input type="text" name="keyword" th:value="${keyword}" placeholder="Search users..." />
                     <button type="submit">Search</button>
+                    </div>
                 </form>
 
                 <a href="/add-new-employee" class="add-button">Add New</a>

@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Objects;
+
 @Controller
 public class UsersController {
 
@@ -50,9 +52,15 @@ public class UsersController {
     }
 
     @GetMapping("/add-new-user")
-    public String addNewUserPage(Model model)
+    public String addNewUserPage(Model model, RedirectAttributes redirectAttributes)
     {
         // only current user with admin role can view add new user page
+        AppUser currentUser = (AppUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(!Objects.equals(currentUser.getRole(), "ADMIN"))
+        {
+            redirectAttributes.addAttribute("error", "only admin can add user !");
+            return "redirect:/users";
+        }
         UserDto userDto = new UserDto();
         model.addAttribute("userDto", userDto);
 
@@ -69,6 +77,13 @@ public class UsersController {
         {
             redirectAttributes.addAttribute("error", "The Email Already Exist !");
             return "redirect:/add-new-user";
+        }
+
+        AppUser currentUser = (AppUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(!Objects.equals(currentUser.getRole(), "ADMIN"))
+        {
+            redirectAttributes.addAttribute("error", "only admin can add user !");
+            return "redirect:/users";
         }
 
 
@@ -90,6 +105,15 @@ public class UsersController {
     @GetMapping("/user")
     public String userPage(@RequestParam String email, @ModelAttribute UserDto userDto, RedirectAttributes redirectAttributes)
     {
+
+        AppUser currentUser = (AppUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(!Objects.equals(currentUser.getRole(), "ADMIN"))
+        {
+            redirectAttributes.addAttribute("error", "only admin can view user !");
+            return "redirect:/users";
+        }
+
+
         if(email.isEmpty())
         {
             redirectAttributes.addAttribute("error", "User Email is Required !");
@@ -116,6 +140,13 @@ public class UsersController {
     public String updateUser(@ModelAttribute UserDto userDto, RedirectAttributes redirectAttributes)
     {
 
+        AppUser currentUser = (AppUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(!Objects.equals(currentUser.getRole(), "ADMIN"))
+        {
+            redirectAttributes.addAttribute("error", "only admin can edit user !");
+            return "redirect:/users";
+        }
+
         AppUser user = appUserRepository.findByEmail(userDto.getEmail()).orElse(null);
 
         if(user ==null)
@@ -141,6 +172,15 @@ public class UsersController {
     @GetMapping("/user-delete")
     public String deleteUser(@RequestParam String email, RedirectAttributes redirectAttributes)
     {
+
+        AppUser currentUser = (AppUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(!Objects.equals(currentUser.getRole(), "ADMIN"))
+        {
+            redirectAttributes.addAttribute("error", "only admin can delete user !");
+            return "redirect:/users";
+        }
+
+
         if(email.isEmpty())
         {
             redirectAttributes.addAttribute("error", "User Email is Required !");

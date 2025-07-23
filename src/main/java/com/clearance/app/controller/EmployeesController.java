@@ -2,6 +2,7 @@ package com.clearance.app.controller;
 
 import com.clearance.app.dto.EmployeeDto;
 
+import com.clearance.app.model.AppUser;
 import com.clearance.app.model.Employee;
 import com.clearance.app.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +25,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 public class EmployeesController {
@@ -66,9 +69,18 @@ public class EmployeesController {
 
 
     @GetMapping("/add-new-employee")
-    public String addNewUserPage(Model model)
+    public String addNewUserPage(Model model, RedirectAttributes redirectAttributes)
     {
         // only current user with admin role can view add new user page
+
+        AppUser currentUser = (AppUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(!Objects.equals(currentUser.getRole(), "ADMIN"))
+        {
+            redirectAttributes.addAttribute("error", "only admin can view add new employee !");
+            return "redirect:/users";
+        }
+
+
         EmployeeDto employeeDto = new EmployeeDto();
         model.addAttribute("employeeDto", employeeDto);
 
@@ -76,8 +88,17 @@ public class EmployeesController {
     }
 
     @PostMapping("/add-new-employee")
-    public String addNewUser(@ModelAttribute EmployeeDto employeeDto)
+    public String addNewUser(@ModelAttribute EmployeeDto employeeDto, RedirectAttributes redirectAttributes)
     {
+
+        AppUser currentUser = (AppUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(!Objects.equals(currentUser.getRole(), "ADMIN"))
+        {
+            redirectAttributes.addAttribute("error", "only admin can  add new employee !");
+            return "redirect:/users";
+        }
+
+
         Employee employee = new Employee();
         employee.setName(employeeDto.getName());
         employee.setArName(employeeDto.getArName());
@@ -94,6 +115,15 @@ public class EmployeesController {
 
     @PostMapping("/import-employees")
     public String importEmployees(@RequestParam("csv") MultipartFile csvFile, RedirectAttributes redirectAttributes) {
+
+        AppUser currentUser = (AppUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(!Objects.equals(currentUser.getRole(), "ADMIN"))
+        {
+            redirectAttributes.addAttribute("error", "only admin can  import employees !");
+            return "redirect:/users";
+        }
+
+
         System.out.println("User wnat to import employees list with csv file");
         if (csvFile.isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "CSV file is empty.");
