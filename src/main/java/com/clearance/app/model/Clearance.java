@@ -34,6 +34,8 @@ public class Clearance {
 
     private List<Approval> approvals; // each department/manager approval => AppUser
 
+    private List<Comment> comments; // each clearance has many Comments
+
     private String notes; // general HR notes or summary
 
 
@@ -143,5 +145,13 @@ public class Clearance {
 
     public void setCreatedByUserEmail(String createdByUserEmail) {
         this.createdByUserEmail = createdByUserEmail;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 }

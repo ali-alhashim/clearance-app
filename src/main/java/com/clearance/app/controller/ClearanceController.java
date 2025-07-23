@@ -4,15 +4,13 @@ package com.clearance.app.controller;
 
 import com.clearance.app.config.AppConfig;
 import com.clearance.app.dto.ClearanceDto;
-import com.clearance.app.model.AppUser;
-import com.clearance.app.model.Approval;
-import com.clearance.app.model.Clearance;
-import com.clearance.app.model.Employee;
+import com.clearance.app.model.*;
 import com.clearance.app.repository.AppUserRepository;
 import com.clearance.app.repository.ClearanceRepository;
 import com.clearance.app.repository.EmployeeRepository;
 import com.clearance.app.service.ClearanceService;
 import com.clearance.app.service.NotificationEmailService;
+import com.sun.jdi.event.StepEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.data.domain.Page;
@@ -345,4 +343,80 @@ public class ClearanceController {
         model.addAttribute("clearance", clearance);
         return "clearance-view";
     }
+
+    @PostMapping("/comments-clearance")
+    public String commentsClearance(@RequestParam String clearanceCode, @RequestParam String text, RedirectAttributes redirectAttributes)
+    {
+        AppUser currentUser = (AppUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Clearance clearance = clearanceRepository.findByCode(clearanceCode).orElse(null);
+        if (clearance == null) {
+            redirectAttributes.addFlashAttribute("error", "The Clearance Code does not exist!");
+            return "redirect:/clearance";
+        }
+
+        // 🔐 Make sure comments list is not null
+        List<Comment> comments = clearance.getComments();
+        if (comments == null) {
+            comments = new ArrayList<>();
+
+        }
+
+        Comment newComment = new Comment();
+        newComment.setCreatedAt(LocalDateTime.now());
+        newComment.setEmail(currentUser.getEmail());
+        newComment.setName(currentUser.getName());
+        newComment.setText(text);
+
+        comments.add(newComment);
+        clearance.setComments(comments);
+        clearanceRepository.save(clearance);
+
+        return "redirect:/clearance-view?code=" + clearanceCode;
+    }
+
+    @PostMapping("/approve-clearance")
+    public String approveClearance(@RequestParam String clearanceCode,
+                                   @RequestParam String note,
+                                   RedirectAttributes redirectAttributes) {
+
+        Clearance clearance = clearanceRepository.findByCode(clearanceCode).orElse(null);
+        if (clearance == null) {
+            redirectAttributes.addFlashAttribute("error", "The Clearance Code does not exist!");
+            return "redirect:/clearance";
+        }
+
+        AppUser currentUser = (AppUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String currentUserEmail = currentUser.getEmail();
+
+        List<Approval> updatedApprovals = clearance.getApprovals();
+        boolean updated = false;
+
+        for (Approval approval : updatedApprovals) {
+            if (approval.getApprovalEmail().equalsIgnoreCase(currentUserEmail)) {
+                if (approval.isApproved()) {
+                    redirectAttributes.addFlashAttribute("error", "You already approved this clearance.");
+                    return "redirect:/clearance-view?code=" + clearanceCode;
+                }
+
+                approval.setNote(note);
+                approval.setApproved(true);
+                approval.setApprovedAt(LocalDateTime.now());
+                updated = true;
+                break;
+            }
+        }
+
+        if (!updated) {
+            redirectAttributes.addFlashAttribute("error", "You are not an assigned approver for this clearance.");
+            return "redirect:/clearance-view?code=" + clearanceCode;
+        }
+
+        // 🔐 This line ensures MongoDB will persist the nested list change
+        clearance.setApprovals(updatedApprovals);
+
+        clearanceRepository.save(clearance);
+        redirectAttributes.addFlashAttribute("success", "Your approval has been recorded.");
+        return "redirect:/clearance-view?code=" + clearanceCode;
+    }
+
 }
