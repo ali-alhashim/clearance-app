@@ -18,10 +18,15 @@
 
     <!-- Toolbar -->
     <div class="toolbar">
-        <label>
-            Search :
-            <input name="keyword" type="text"/>
-        </label>
+
+        <form th:action="@{/clearance}" method="get">
+            <div class="row">
+                <input type="text" name="keyword" th:value="${keyword}" placeholder="Search clearance..." />
+                <button type="submit">Search</button>
+            </div>
+        </form>
+
+
         <a href="/add-new-clearance" class="add-button">Add New</a>
     </div>
 
