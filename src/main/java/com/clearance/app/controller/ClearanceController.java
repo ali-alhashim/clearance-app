@@ -332,9 +332,9 @@ public class ClearanceController {
         String clearanceLink = appConfig.getBaseUrl() + "/clearance-view?code=" + clearance.getCode();
 
 
-        for (Approval approval : approvals) {
-            notificationEmailService.sendApprovalEmail(approval.getApprovalEmail(), clearance.getCode(), clearanceLink);
-        }
+
+            notificationEmailService.sendApprovalEmail(approvals, clearance.getCode(), clearanceLink);
+
 
         return "redirect:/clearance";
     }

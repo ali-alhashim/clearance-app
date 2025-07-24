@@ -1,11 +1,14 @@
 package com.clearance.app.service;
 
+import com.clearance.app.model.Approval;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import java.util.stream.Collectors;
 
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -17,10 +20,16 @@ public class NotificationEmailService {
     @Autowired
     private Environment env;
 
-    public void sendApprovalEmail(String to, String clearanceCode, String link) {
+    public void sendApprovalEmail(List<Approval> approvals, String clearanceCode, String link) {
+
+        List<String> emailList = approvals.stream()
+                .map(Approval::getApprovalEmail)
+                .distinct()
+                .collect(Collectors.toList());
+
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(Objects.requireNonNull(env.getProperty("spring.mail.username"))); // Sender email
-        message.setTo(to);
+        message.setTo(emailList.toArray(new String[0]));
         message.setSubject("New Clearance Request - Action Required");
         message.setText("Dear Approver,\n\nA new clearance request (Code: " + clearanceCode + ") is awaiting your approval.\n"
                 + "Please visit the following link to review it:\n\n"
