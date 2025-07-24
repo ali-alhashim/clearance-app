@@ -84,7 +84,7 @@ public class EmployeesController {
         EmployeeDto employeeDto = new EmployeeDto();
         model.addAttribute("employeeDto", employeeDto);
 
-        return "/add-new-employee";
+        return "add-new-employee";
     }
 
     @PostMapping("/add-new-employee")

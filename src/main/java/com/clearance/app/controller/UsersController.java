@@ -64,7 +64,7 @@ public class UsersController {
         UserDto userDto = new UserDto();
         model.addAttribute("userDto", userDto);
 
-        return "/add-new-user";
+        return "add-new-user";
     }
 
     @PostMapping("/add-new-user")
