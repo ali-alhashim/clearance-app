@@ -8,6 +8,7 @@ public class Comment {
     private String email;
     private String text;
     private LocalDateTime createdAt;
+    private String filePath;
 
     public String getName() {
         return name;
@@ -39,5 +40,13 @@ public class Comment {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 }

@@ -76,14 +76,21 @@
                                 <span class="timestamp" th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}">Time</span>
                             </div>
                             <p th:text="${comment.text}" class="comment-text">Comment content</p>
+                            <a th:if="${comment.filePath != null}"
+                               th:href="@{${comment.filePath}}"
+                               target="_blank"
+                               class="btn btn-sm btn-outline-primary">
+                                📎 View Attachment
+                            </a>
                         </li>
                     </ul>
                 </section>
 
-            <form th:action="@{/comments-clearance}" method="post">
+            <form th:action="@{/comments-clearance}" method="post" enctype="multipart/form-data">
                 <div class="row">
                     <input type="hidden" name="clearanceCode" th:value="${clearance.code}" />
                     <input type="text" name="text" placeholder="Enter your comment ...." />
+                    <input type="file" name="file"/>
                     <button class="add-button">send</button>
                 </div>
             </form>

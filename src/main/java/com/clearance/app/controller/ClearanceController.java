@@ -13,23 +13,33 @@ import com.clearance.app.service.NotificationEmailService;
 import com.sun.jdi.event.StepEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 public class ClearanceController {
@@ -344,8 +354,12 @@ public class ClearanceController {
         return "clearance-view";
     }
 
+    // Add Comment to clearance
     @PostMapping("/comments-clearance")
-    public String commentsClearance(@RequestParam String clearanceCode, @RequestParam String text, RedirectAttributes redirectAttributes)
+    public String commentsClearance(@RequestParam String clearanceCode,
+                                    @RequestParam String text,
+                                    @RequestParam(name = "file", required = false)  MultipartFile file,
+                                    RedirectAttributes redirectAttributes)
     {
         AppUser currentUser = (AppUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Clearance clearance = clearanceRepository.findByCode(clearanceCode).orElse(null);
@@ -362,6 +376,45 @@ public class ClearanceController {
         }
 
         Comment newComment = new Comment();
+
+        // if there is file upload and set the filePath in newComment
+        if(file != null && !file.isEmpty())
+        {
+            // Handle file upload
+            // make sure the file is pdf or excel or word or image other not accepted
+            String contentType = file.getContentType();
+            if (contentType != null && (contentType.equals("application/pdf") || contentType.equals("application/msword") || contentType.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document") || contentType.equals("application/vnd.ms-excel") || contentType.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") || contentType.startsWith("image/")))
+            {
+                try {
+                    String uploadDir = "uploads/comments/";
+                    Files.createDirectories(Paths.get(uploadDir));
+
+                    String originalFilename = file.getOriginalFilename();
+                    String uniqueFileName = UUID.randomUUID() + "_" + originalFilename;
+                    Path filePath = Paths.get(uploadDir + uniqueFileName);
+                    file.transferTo(filePath);
+                    newComment.setFilePath("/files/comments/" + uniqueFileName);
+                }
+                catch (IOException e)
+                {
+                    redirectAttributes.addFlashAttribute("error", "File upload failed: " + e.getMessage());
+                    return "redirect:/clearance-view?code=" + clearanceCode;
+                }
+            }
+            else
+            {
+                redirectAttributes.addFlashAttribute("error", "Invalid file type. Only PDF, Word, Excel, and images are allowed.");
+                return "redirect:/clearance-view?code=" + clearanceCode;
+            }
+
+
+
+
+
+        }
+        //-----------------------------------------------------------
+
+
         newComment.setCreatedAt(LocalDateTime.now());
         newComment.setEmail(currentUser.getEmail());
         newComment.setName(currentUser.getName());
@@ -373,6 +426,7 @@ public class ClearanceController {
 
         return "redirect:/clearance-view?code=" + clearanceCode;
     }
+
 
     @PostMapping("/approve-clearance")
     public String approveClearance(@RequestParam String clearanceCode,
@@ -417,6 +471,24 @@ public class ClearanceController {
         clearanceRepository.save(clearance);
         redirectAttributes.addFlashAttribute("success", "Your approval has been recorded.");
         return "redirect:/clearance-view?code=" + clearanceCode;
+    }
+
+
+    @GetMapping("/files/comments/{filename:.+}")
+    public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
+        try {
+            Path file = Paths.get("uploads/comments/").resolve(filename);
+            Resource resource = new UrlResource(file.toUri());
+            if (!resource.exists()) throw new FileNotFoundException("File not found");
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
+                    .body(resource);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
 }
