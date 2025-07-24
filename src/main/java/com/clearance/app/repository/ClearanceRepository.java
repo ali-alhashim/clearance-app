@@ -25,6 +25,7 @@ public interface ClearanceRepository extends MongoRepository<Clearance, String> 
             "  { 'badgeNumber': { $regex: ?0, $options: 'i' } }, " +
             "  { 'name': { $regex: ?0, $options: 'i' } }, " +
             "  { 'department': { $regex: ?0, $options: 'i' } } " +
+            "  { 'code': { $regex: ?0, $options: 'i' } } " +
             "] }")
     Page<Clearance> findByKeyword(String keyword, Pageable pageable);
 
