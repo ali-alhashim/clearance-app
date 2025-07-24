@@ -51,13 +51,20 @@
                 </tbody>
             </table>
 
-            <form th:action="@{/approve-clearance}" method="post">
+            <form th:action="@{/approve-clearance}" method="post" onsubmit="return confirmApproval()">
                 <div class="row">
-                <input type="hidden" name="clearanceCode" th:value="${clearance.code}" />
-                <input type="text" name="note" placeholder="Enter your note ...." />
-                <button class="add-button">Approve</button>
+                    <input type="hidden" name="clearanceCode" th:value="${clearance.code}" />
+                    <input type="text" name="note" placeholder="Enter your note ...." />
+                    <button class="add-button">Approve</button>
                 </div>
             </form>
+
+            <script>
+                function confirmApproval() {
+                    return confirm("Are you sure you want to approve this clearance?");
+                }
+            </script>
+
 
 
 
