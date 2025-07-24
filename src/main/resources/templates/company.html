@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head}">
+</head>
+<link rel="stylesheet" href="/css/style.css" />
+<body>
+
+<div class="container">
+    <div th:replace="~{fragments/layout :: sidebar}"></div>
+
+    <main>
+
+        <div class="col">
+            <h2 class="page-title">Company</h2>
+
+            <div th:if="${error}" class="error-message">
+                <p th:text="${error}"></p>
+            </div>
+
+
+
+
+            <form th:action="@{/company}" method="post" enctype="multipart/form-data">
+            <table class="clearance-table">
+
+                <tbody>
+                <tr>
+                    <td>Arabic Name</td><td><input type="text" name="arName" th:value="${company.arName}"/> </td>
+                </tr>
+                <tr>
+                  <td>Name</td><td><input type="text" name="name" th:value="${company.name}"/> </td>
+                </tr>
+                <tr>
+                    <td>CR.</td><td><input type="text" name="cr" th:value="${company.cr}"/> </td>
+                </tr>
+                <tr>
+                    <td>Logo</td>
+                    <td>
+                        <input type="file" name="logo"/>
+                        <img th:if="${company.logo != null}" th:src="@{${company.logo}}" alt="Company Logo" />
+                     </td>
+
+                </tr>
+
+                <tr>
+                    <td colspan="2">
+                        <button type="submit"> Update </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            </form>
+
+
+
+
+
+        </div><!--end col-->
+
+
+    </main>
+</div>
+
+
+<script>
+
+    const sidebarSelected = document.getElementById("Company");
+    if (sidebarSelected) {
+        sidebarSelected.classList.add("sidebar-active");
+    }
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
