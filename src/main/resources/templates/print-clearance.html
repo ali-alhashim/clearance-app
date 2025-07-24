@@ -93,7 +93,7 @@
        <span th:text="${approval.approved} ? '✔' : '✖'"></span>
      </td>
      <td> <span th:text="${approval.note}"></span>  </td>
-     <td> <span th:text="${approval.approvedAt}"></span>  </td>
+     <td> <span th:text="${#temporals.format(approval.approvedAt, 'dd/MM/yyyy hh:mm a')}"></span>  </td>
    </tr>
   </tbody>
 </table>
