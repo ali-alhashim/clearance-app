@@ -7,10 +7,11 @@ import com.clearance.app.dto.ClearanceDto;
 import com.clearance.app.model.*;
 import com.clearance.app.repository.AppUserRepository;
 import com.clearance.app.repository.ClearanceRepository;
+import com.clearance.app.repository.CompanyRepository;
 import com.clearance.app.repository.EmployeeRepository;
 import com.clearance.app.service.ClearanceService;
 import com.clearance.app.service.NotificationEmailService;
-import com.sun.jdi.event.StepEvent;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.core.io.Resource;
@@ -57,6 +58,9 @@ public class ClearanceController {
 
     @Autowired
     NotificationEmailService notificationEmailService;
+
+    @Autowired
+    CompanyRepository companyRepository;
 
     @Autowired
     private AppConfig appConfig;
@@ -317,6 +321,7 @@ public class ClearanceController {
 
 
         clearance.setName(employee.getName());
+        clearance.setLocation(employee.getLocation());
         clearance.setBadgeNumber(clearanceDto.getBadgeNumber());
         clearance.setCreatedAt(LocalDateTime.now());
         clearance.setCode(clearanceService.generateNextClearanceCode());
@@ -489,6 +494,28 @@ public class ClearanceController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+    }
+
+
+    @GetMapping("/print-clearance")
+    public String printClearance(Model model, @RequestParam String clearanceCode, RedirectAttributes redirectAttributes)
+    {
+        Clearance clearance = clearanceRepository.findByCode(clearanceCode).orElse(null);
+        if (clearance == null) {
+            redirectAttributes.addFlashAttribute("error", "The Clearance Code does not exist!");
+            return "redirect:/clearance";
+        }
+
+        Company company = companyRepository.findFirstBy();
+        if(company ==null)
+        {
+            company = new Company();
+        }
+
+
+        model.addAttribute("clearance", clearance);
+        model.addAttribute("company", company);
+        return "print-clearance";
     }
 
 }

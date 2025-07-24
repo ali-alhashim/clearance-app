@@ -25,6 +25,7 @@ public class Clearance {
     private String arName;
     private String department;
     private String jobTitle;
+    private String location;
 
     private String createdByUserEmail; // HR user who created this
 
@@ -170,5 +171,13 @@ public class Clearance {
         if (total == 0) return "0/0 (0%)";
         int percentage = (int) ((approved * 100.0) / total);
         return approved + "/" + total + " (" + percentage + "%)";
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }

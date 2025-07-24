@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${clearance.code}"></title>
+  <style>
+    @page {
+      size: A4;
+      margin: 2cm;
+    }
+    body {
+      font-family: "Arial", sans-serif;
+      margin: 0;
+      padding: 2cm;
+      width: 210mm;
+      height: 297mm;
+      box-sizing: border-box;
+      background: white;
+      direction: rtl;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1em;
+      margin-bottom: 1em;
+    }
+    td, th {
+      border: 1px solid #000;
+      padding: 0.5em;
+      text-align: right;
+    }
+    h1, h2, h3 {
+      text-align: center;
+    }
+    .section-title {
+      font-weight: bold;
+      margin-top: 1em;
+    }
+    .text-center
+    {
+       text-align: center;
+    }
+    .text-left
+    {
+    text-align: left;
+    }
+
+  </style>
+</head>
+<body>
+<img th:if="${company.logo != null}" th:src="@{${company.logo}}" alt="Company Logo" />
+<h2>إخلاء طرف</h2>
+<p style="text-align: center;">Internal Use Only #:<span th:text="${clearance.code}"></span></p>
+
+<table>
+  <tr>
+    <td><strong> الرقم الوظيفي</strong><td class="text-center"><span th:text="${clearance.badgeNumber}"></span> </td><td class="text-left">Company ID </td>
+  </tr>
+  <tr>
+    <td><strong> الاسم</strong> </td> <td class="text-center">   <span th:text="${clearance.arName}"></span> <br/> <span th:text="${clearance.name}"></span></td> <td class="text-left">Name</td>
+  </tr>
+  <tr>
+    <td><strong> القسم</strong> </td> <td class="text-center"> <span th:text="${clearance.department}" ></span> </td> <td class="text-left">Department</td>
+
+  </tr>
+  <tr>
+    <td><strong> المسمى الوظيفي</strong></td> <td class="text-center"> <span th:text="${clearance.jobTitle}">JobTitle </span> </td> <td class="text-left">Job Title</td>
+  </tr>
+  <tr>
+    <td><strong> تاريخ أخر يوم عمل</strong> </td> <td class="text-center"><span th:text="${clearance.lastWorkingDate}"></span></td> <td class="text-left">Last Working Date</td>
+  </tr>
+  <tr>
+    <td><strong> الموقع</strong></td>  <td class="text-center"><span th:text="${clearance.location}"></span></td> <td class="text-left">Location</td>
+  </tr>
+</table>
+
+<table class="signature-section">
+  <thead>
+  <tr>
+    <th>القســـــم<br>Department</th>
+    <th>الأسم<br>Name</th>
+    <th>الموافقة<br>Approval</th>
+    <th>ملاحظات<br>Notes</th>
+    <th>التاريخ<br>Date</th>
+  </tr>
+  </thead>
+  <tbody>
+   <tr th:each="approval : ${clearance.approvals}">
+
+     <td> <span th:text="${approval.department}"></span>  </td>
+     <td> <span th:text="${approval.name}"></span>  </td>
+     <td class="text-center">
+       <span th:text="${approval.approved} ? '✔' : '✖'"></span>
+     </td>
+     <td> <span th:text="${approval.note}"></span>  </td>
+     <td> <span th:text="${approval.approvedAt}"></span>  </td>
+   </tr>
+  </tbody>
+</table>
+
+
+
+<p style="margin-top: 2em;" class="text-center">مدير شؤون الموظفين<br><strong>HR Manager</strong></p>
+
+
+
+</body>
+</html>

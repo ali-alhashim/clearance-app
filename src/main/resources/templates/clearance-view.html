@@ -24,6 +24,14 @@
                 <p><strong>Created:</strong> <span th:text="${#temporals.format(clearance.createdAt, 'yyyy-MM-dd HH:mm')}">Date</span></p>
                 <p><strong>Created By:</strong> <span th:text="${clearance.createdByUserEmail}">createdByUserEmail</span></p>
             </div>
+            <div class="row">
+               <hr/>
+                    <form th:action="@{/print-clearance}" method="get">
+                        <input type="hidden" name="clearanceCode" th:value="${clearance.code}" />
+                        <button type="submit">Print</button>
+                    </form>
+
+            </div>
 
             <table class="clearance-table">
                 <thead>
