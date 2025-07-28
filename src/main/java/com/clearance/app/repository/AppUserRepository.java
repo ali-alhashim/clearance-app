@@ -12,7 +12,9 @@ import org.springframework.data.repository.query.Param;
 
 
 public interface AppUserRepository extends MongoRepository<AppUser, String> {
-    Optional<AppUser> findByEmail(String email);
+
+    @Query("{ 'email': { $regex: ?0, $options: 'i' } }")
+    Optional<AppUser> findByEmailIgnoreCase(String email);
 
     List<AppUser> findByRole(String role);
 

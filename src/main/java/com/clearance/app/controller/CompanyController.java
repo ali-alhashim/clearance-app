@@ -1,7 +1,10 @@
 package com.clearance.app.controller;
 
+import com.clearance.app.model.AppUser;
 import com.clearance.app.model.Company;
+import com.clearance.app.model.Log;
 import com.clearance.app.repository.CompanyRepository;
+import com.clearance.app.repository.LogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -9,6 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +28,7 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Controller
@@ -33,6 +38,9 @@ public class CompanyController {
 
     @Autowired
     CompanyRepository companyRepository;
+
+    @Autowired
+    LogRepository logRepository;
 
     @GetMapping("/company")
     public String company(Model model)
@@ -88,6 +96,14 @@ public class CompanyController {
         }
 
         companyRepository.save(company);
+
+        AppUser currentUser = (AppUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Log log = new Log();
+        log.setName(currentUser.getName());
+        log.setEmail(currentUser.getEmail());
+        log.setDate(LocalDateTime.now());
+        log.setAction("update  Company");
+        logRepository.save(log);
 
         return "redirect:/company";
     }

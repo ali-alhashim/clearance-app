@@ -1,7 +1,9 @@
 package com.clearance.app.controller;
 
 import com.clearance.app.model.AppUser;
+import com.clearance.app.model.Log;
 import com.clearance.app.repository.AppUserRepository;
+import com.clearance.app.repository.LogRepository;
 import com.clearance.app.service.EmailService;
 import com.clearance.app.service.OtpService;
 import jakarta.servlet.http.HttpSession;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -32,6 +35,9 @@ public class LoginController {
 
     @Autowired
     OtpService otpService;
+
+    @Autowired
+    LogRepository logRepository;
 
 
     @GetMapping("/login")
@@ -48,7 +54,7 @@ public class LoginController {
         System.out.println("post login for email: "+email);
 
         boolean isFirstUser = appUserRepository.count() == 0;
-        AppUser user = appUserRepository.findByEmail(email).orElse(null);
+        AppUser user = appUserRepository.findByEmailIgnoreCase(email).orElse(null);
 
         if (!isFirstUser && user == null) {
             model.addAttribute("error", "Email not registered");
@@ -103,7 +109,7 @@ public class LoginController {
     public String verifyOtp(@RequestParam("email") String email,@RequestParam("otp") String otp,Model model, HttpSession session)
     {
         boolean isFirstUser = appUserRepository.count() == 0;
-        AppUser user = appUserRepository.findByEmail(email).orElse(null);
+        AppUser user = appUserRepository.findByEmailIgnoreCase(email).orElse(null);
         if (user == null && !isFirstUser) {
             model.addAttribute("error", "User not found");
             return "login";
@@ -120,6 +126,7 @@ public class LoginController {
         {
             user = new AppUser();
             user.setName("Administrator");
+
             user.setEmail(email);
             user.setRole("ADMIN");
             user.setManager(true);
@@ -137,6 +144,13 @@ public class LoginController {
 
 
         session.setAttribute("user", user);
+
+        Log log = new Log();
+        log.setName(user.getName());
+        log.setEmail(user.getEmail());
+        log.setDate(LocalDateTime.now());
+        log.setAction("Login");
+        logRepository.save(log);
 
         model.addAttribute("pageTitle", "Clearance Page");
 

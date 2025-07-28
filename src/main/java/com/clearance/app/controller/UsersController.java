@@ -3,7 +3,9 @@ package com.clearance.app.controller;
 
 import com.clearance.app.dto.UserDto;
 import com.clearance.app.model.AppUser;
+import com.clearance.app.model.Log;
 import com.clearance.app.repository.AppUserRepository;
+import com.clearance.app.repository.LogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Controller
@@ -25,6 +28,9 @@ public class UsersController {
 
     @Autowired
     AppUserRepository appUserRepository;
+
+    @Autowired
+    LogRepository logRepository;
 
     @GetMapping("/users")
     public String usersPage(Model model, @RequestParam(required = false) String keyword, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size)
@@ -72,7 +78,7 @@ public class UsersController {
     {
         // only current user with admin role can add new user
 
-        AppUser existEmail = appUserRepository.findByEmail(userDto.getEmail()).orElse(null);
+        AppUser existEmail = appUserRepository.findByEmailIgnoreCase(userDto.getEmail()).orElse(null);
         if(existEmail !=null)
         {
             redirectAttributes.addAttribute("error", "The Email Already Exist !");
@@ -98,6 +104,17 @@ public class UsersController {
         newUser.setEmail(userDto.getEmail());
         newUser.setRole(userDto.getRole());
         appUserRepository.save(newUser);
+
+
+
+        Log log = new Log();
+        log.setName(currentUser.getName());
+        log.setEmail(currentUser.getEmail());
+        log.setDate(LocalDateTime.now());
+        log.setAction("Add New User Name:"+newUser.getName() +" email:"+newUser.getEmail());
+        logRepository.save(log);
+
+
         return "redirect:/users";
     }
 
@@ -120,7 +137,7 @@ public class UsersController {
             return "redirect:/users";
         }
 
-        AppUser user = appUserRepository.findByEmail(email).orElse(null);
+        AppUser user = appUserRepository.findByEmailIgnoreCase(email).orElse(null);
 
         if(user ==null)
         {
@@ -147,7 +164,7 @@ public class UsersController {
             return "redirect:/users";
         }
 
-        AppUser user = appUserRepository.findByEmail(userDto.getEmail()).orElse(null);
+        AppUser user = appUserRepository.findByEmailIgnoreCase(userDto.getEmail()).orElse(null);
 
         if(user ==null)
         {
@@ -164,6 +181,14 @@ public class UsersController {
         user.setRole(userDto.getRole());
 
         appUserRepository.save(user);
+
+        Log log = new Log();
+        log.setName(currentUser.getName());
+        log.setEmail(currentUser.getEmail());
+        log.setDate(LocalDateTime.now());
+        log.setAction("update  User Name:"+user.getName() +" email:"+user.getEmail());
+        logRepository.save(log);
+
 
 
         return "redirect:/users";
@@ -187,7 +212,7 @@ public class UsersController {
             return "redirect:/users";
         }
 
-        AppUser user = appUserRepository.findByEmail(email).orElse(null);
+        AppUser user = appUserRepository.findByEmailIgnoreCase(email).orElse(null);
 
         if(user ==null)
         {
@@ -196,6 +221,15 @@ public class UsersController {
         }
 
         appUserRepository.delete(user);
+
+
+        Log log = new Log();
+        log.setName(currentUser.getName());
+        log.setEmail(currentUser.getEmail());
+        log.setDate(LocalDateTime.now());
+        log.setAction("Delete User Name:"+user.getName() +" email:"+user.getEmail());
+        logRepository.save(log);
+
         return "redirect:/users";
     }
 }

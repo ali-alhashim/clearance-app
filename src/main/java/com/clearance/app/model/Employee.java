@@ -4,6 +4,8 @@ package com.clearance.app.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDate;
+
 @Document(collection = "employees")
 public class Employee {
 
@@ -17,6 +19,9 @@ public class Employee {
     private String name;
 
     private String arName;
+
+    private String nationality;
+    private LocalDate contractStart;
 
     private String department;
 
@@ -100,5 +105,21 @@ public class Employee {
 
     public void setArName(String arName) {
         this.arName = arName;
+    }
+
+    public String getNationality() {
+        return nationality;
+    }
+
+    public LocalDate getContractStart() {
+        return contractStart;
+    }
+
+    public void setNationality(String nationality) {
+        this.nationality = nationality;
+    }
+
+    public void setContractStart(LocalDate contractStart) {
+        this.contractStart = contractStart;
     }
 }

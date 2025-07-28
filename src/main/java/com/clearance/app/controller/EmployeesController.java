@@ -4,7 +4,9 @@ import com.clearance.app.dto.EmployeeDto;
 
 import com.clearance.app.model.AppUser;
 import com.clearance.app.model.Employee;
+import com.clearance.app.model.Log;
 import com.clearance.app.repository.EmployeeRepository;
+import com.clearance.app.repository.LogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,6 +25,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -32,6 +37,9 @@ public class EmployeesController {
 
     @Autowired
     EmployeeRepository employeeRepository;
+
+    @Autowired
+    LogRepository logRepository;
 
     @GetMapping("/employees")
     public String employeesPage(Model model, @RequestParam(required = false) String keyword, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size)
@@ -109,6 +117,16 @@ public class EmployeesController {
         employee.setLocation(employeeDto.getLocation());
         employeeRepository.save(employee);
 
+
+
+        Log log = new Log();
+        log.setName(currentUser.getName());
+        log.setEmail(currentUser.getEmail());
+        log.setDate(LocalDateTime.now());
+        log.setAction("Add New Employee Name"+employee.getName() +" Badge Number:"+employee.getBadgeNumber());
+        logRepository.save(log);
+
+
         return "redirect:/employees";
     }
 
@@ -136,19 +154,22 @@ public class EmployeesController {
         {
             String headerLine = reader.readLine();
 
+            headerLine = headerLine.replace("\uFEFF", ""); // Remove BOM if present
+
             if (headerLine == null) {
                 redirectAttributes.addFlashAttribute("error", "CSV file is missing header.");
                 return "redirect:/employees";
             }
 
+
             String[] headers = headerLine.split(",");
             String[] expectedHeaders = {
-                    "badgeNumber", "name", "arabicName", "email", "department", "location", "jobTitle"
+                    "badgeNumber", "name", "arabicName", "email", "department", "location", "jobTitle", "contractStart", "nationality"
             };
 
             for (int i = 0; i < expectedHeaders.length; i++) {
                 if (headers.length <= i || !headers[i].trim().equalsIgnoreCase(expectedHeaders[i])) {
-                    redirectAttributes.addFlashAttribute("error", "CSV file columns do not match expected format: [badgeNumber, name, arabicName, email, department, location, jobTitle]");
+                    redirectAttributes.addFlashAttribute("error", "CSV file columns do not match expected format: [badgeNumber, name, arabicName, email, department, location, jobTitle, contractStart, nationality]");
                     return "redirect:/employees";
                 }
             }
@@ -159,7 +180,7 @@ public class EmployeesController {
 
                 String[] fields = line.split(",", -1); // -1 includes trailing empty strings
 
-                if (fields.length < 7) continue; // skip malformed rows
+                if (fields.length < 9) continue; // skip malformed rows
 
                 Employee employee = new Employee();
                 employee.setBadgeNumber(fields[0].trim());
@@ -169,12 +190,31 @@ public class EmployeesController {
                 employee.setDepartment(fields[4].trim());
                 employee.setLocation(fields[5].trim());
                 employee.setJobTitle(fields[6].trim());
+                // ------- contractStart date like 5/20/2002 to LocalDate fields[7] or maybe null or something different
+                String contractStartRaw = fields[7].trim();
+                try{
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yyyy");
+                    LocalDate contractStart = LocalDate.parse(contractStartRaw, formatter);
+                    employee.setContractStart(contractStart);
+                }catch (Exception e)
+                {
+                    System.out.println(e.getMessage());
+                }
+                employee.setNationality(fields[8].trim());
 
                 employees.add(employee);
 
             }
             System.out.println("Save All employees to Database");
             employeeRepository.saveAll(employees);
+
+
+            Log log = new Log();
+            log.setName(currentUser.getName());
+            log.setEmail(currentUser.getEmail());
+            log.setDate(LocalDateTime.now());
+            log.setAction("Import Employees list from CSV File");
+            logRepository.save(log);
 
 
         }

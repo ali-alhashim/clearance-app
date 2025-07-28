@@ -135,28 +135,28 @@ public class ClearanceController {
             return "redirect:/add-new-clearance";
         }
 
-        AppUser itUser = appUserRepository.findByEmail(clearanceDto.getItEmail()).orElse(null);
+        AppUser itUser = appUserRepository.findByEmailIgnoreCase(clearanceDto.getItEmail()).orElse(null);
         if(itUser ==null)
         {
             redirectAttributes.addAttribute("error", "The IT User not exist !");
             return "redirect:/add-new-clearance";
         }
 
-        AppUser accountsUser = appUserRepository.findByEmail(clearanceDto.getAccountsEmail()).orElse(null);
+        AppUser accountsUser = appUserRepository.findByEmailIgnoreCase(clearanceDto.getAccountsEmail()).orElse(null);
         if(accountsUser == null)
         {
             redirectAttributes.addAttribute("error", "The Accounts User not exist !");
             return "redirect:/add-new-clearance";
         }
 
-        AppUser hrUser = appUserRepository.findByEmail(clearanceDto.getHrEmail()).orElse(null);
+        AppUser hrUser = appUserRepository.findByEmailIgnoreCase(clearanceDto.getHrEmail()).orElse(null);
         if(hrUser == null)
         {
             redirectAttributes.addAttribute("error", "The HR User not exist !");
             return "redirect:/add-new-clearance";
         }
 
-        AppUser managerUser = appUserRepository.findByEmail(clearanceDto.getDirectManagerEmail()).orElse(null);
+        AppUser managerUser = appUserRepository.findByEmailIgnoreCase(clearanceDto.getDirectManagerEmail()).orElse(null);
         if(managerUser == null)
         {
             redirectAttributes.addAttribute("error", "The Direct Manager User not exist !");
@@ -164,7 +164,7 @@ public class ClearanceController {
         }
 
         boolean isPurchasingApprovalReqiured = true;
-        AppUser purchasingUser = appUserRepository.findByEmail(clearanceDto.getPurchasingEmail()).orElse(null);
+        AppUser purchasingUser = appUserRepository.findByEmailIgnoreCase(clearanceDto.getPurchasingEmail()).orElse(null);
         if(purchasingUser == null)
         {
             // no mandatory approval so if no email we will skip this required approval
@@ -172,7 +172,7 @@ public class ClearanceController {
         }
 
         boolean isCustomerServiceApprovalReqiurd = true;
-        AppUser customerServiceUser = appUserRepository.findByEmail(clearanceDto.getCustomerEmail()).orElse(null);
+        AppUser customerServiceUser = appUserRepository.findByEmailIgnoreCase(clearanceDto.getCustomerEmail()).orElse(null);
         if(customerServiceUser == null)
         {
             // no mandatory approval so if no email we will skip this required approval
@@ -180,41 +180,41 @@ public class ClearanceController {
         }
 
         boolean isSalesApprovalReqiurd = true;
-        AppUser salesUser = appUserRepository.findByEmail(clearanceDto.getSalesEmail()).orElse(null);
+        AppUser salesUser = appUserRepository.findByEmailIgnoreCase(clearanceDto.getSalesEmail()).orElse(null);
         if(salesUser ==null)
         {
             isSalesApprovalReqiurd = false;
         }
 
-        AppUser mobileSIMUser = appUserRepository.findByEmail(clearanceDto.getMobileEmail()).orElse(null);
+        AppUser mobileSIMUser = appUserRepository.findByEmailIgnoreCase(clearanceDto.getMobileEmail()).orElse(null);
         if(mobileSIMUser ==null)
         {
             redirectAttributes.addAttribute("error", "The Mobile User not exist !");
             return "redirect:/add-new-clearance";
         }
 
-        AppUser companyVehicleUser = appUserRepository.findByEmail(clearanceDto.getVehicleEmail()).orElse(null);
+        AppUser companyVehicleUser = appUserRepository.findByEmailIgnoreCase(clearanceDto.getVehicleEmail()).orElse(null);
         if(companyVehicleUser == null)
         {
             redirectAttributes.addAttribute("error", "The Company Vehicle User not exist !");
             return "redirect:/add-new-clearance";
         }
 
-        AppUser securityUser = appUserRepository.findByEmail(clearanceDto.getSecurityEmail()).orElse(null);
+        AppUser securityUser = appUserRepository.findByEmailIgnoreCase(clearanceDto.getSecurityEmail()).orElse(null);
         if(securityUser ==null)
         {
             redirectAttributes.addAttribute("error", "The Security User not exist !");
             return "redirect:/add-new-clearance";
         }
 
-        AppUser insuranceUser = appUserRepository.findByEmail(clearanceDto.getInsuranceEmail()).orElse(null);
+        AppUser insuranceUser = appUserRepository.findByEmailIgnoreCase(clearanceDto.getInsuranceEmail()).orElse(null);
         if(insuranceUser ==null)
         {
             redirectAttributes.addAttribute("error", "The Insurance User not exist !");
             return "redirect:/add-new-clearance";
         }
 
-        AppUser financeUser = appUserRepository.findByEmail(clearanceDto.getFinanceEmail()).orElse(null);
+        AppUser financeUser = appUserRepository.findByEmailIgnoreCase(clearanceDto.getFinanceEmail()).orElse(null);
         if(financeUser == null)
         {
             redirectAttributes.addAttribute("error", "The Finance User not exist !");

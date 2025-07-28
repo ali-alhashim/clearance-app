@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head}">
+</head>
+<link rel="stylesheet" href="/css/style.css" />
+<body>
+
+<div class="container">
+    <div th:replace="~{fragments/layout :: sidebar}"></div>
+
+    <main>
+
+        <div class="col">
+            <h2 class="page-title">Logs</h2>
+            <div th:if="${error}" class="error-message">
+                <p th:text="${error}"></p>
+            </div>
+
+            <!-- Toolbar -->
+            <div class="toolbar">
+
+                <form th:action="@{/logs}" method="get">
+                    <div class="row">
+                        <input type="text" name="keyword" th:value="${keyword}" placeholder="Search users..." />
+                        <button type="submit">Search</button>
+                    </div>
+                </form>
+
+
+            </div>
+
+
+
+            <table class="clearance-table">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Date</th>
+                    <th>Action</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="log, index: ${logs}">
+                    <td th:text="${index.count}"></td>
+                    <td th:text="${log.name}"></td>
+                    <td>
+                        <a class="badge" th:href="@{/user(email=${log.email})}" th:text="${log.email}"></a>
+                    </td>
+                    <td th:text="${log.date}"></td>
+                    <td th:text="${log.action}"></td>
+
+                </tr>
+                </tbody>
+            </table>
+
+
+
+            <div>
+                <span th:text="'Page ' + ${logs.number + 1} + ' of ' + ${logs.totalPages}"></span>
+
+                <a th:href="@{/logs(page=${logs.number - 1}, size=${logs.size}, keyword=${keyword})}"
+                   th:if="${logs.hasPrevious()}">Previous</a>
+
+                <a th:href="@{/logs(page=${logs.number + 1}, size=${logs.size}, keyword=${keyword})}"
+                   th:if="${logs.hasNext()}">Next</a>
+            </div>
+
+        </div><!--end col-->
+
+
+    </main>
+</div>
+
+
+<script>
+
+    const sidebarSelected = document.getElementById("Logs");
+    if (sidebarSelected) {
+        sidebarSelected.classList.add("sidebar-active");
+    }
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
