@@ -5,10 +5,7 @@ package com.clearance.app.controller;
 import com.clearance.app.config.AppConfig;
 import com.clearance.app.dto.ClearanceDto;
 import com.clearance.app.model.*;
-import com.clearance.app.repository.AppUserRepository;
-import com.clearance.app.repository.ClearanceRepository;
-import com.clearance.app.repository.CompanyRepository;
-import com.clearance.app.repository.EmployeeRepository;
+import com.clearance.app.repository.*;
 import com.clearance.app.service.ClearanceService;
 import com.clearance.app.service.NotificationEmailService;
 
@@ -64,6 +61,9 @@ public class ClearanceController {
 
     @Autowired
     private AppConfig appConfig;
+
+    @Autowired
+    LogRepository logRepository;
 
     @GetMapping({"/", "/clearance"})
     public String clearance(Model model, @RequestParam(required = false) String keyword, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size)
@@ -340,6 +340,13 @@ public class ClearanceController {
 
             notificationEmailService.sendApprovalEmail(approvals, clearance.getCode(), clearanceLink);
 
+        Log log = new Log();
+        log.setName(currentUser.getName());
+        log.setEmail(currentUser.getEmail());
+        log.setDate(LocalDateTime.now());
+        log.setAction("Added New Clearance code:"+clearance.getCode());
+        logRepository.save(log);
+
 
         return "redirect:/clearance";
     }
@@ -429,6 +436,15 @@ public class ClearanceController {
         clearance.setComments(comments);
         clearanceRepository.save(clearance);
 
+
+
+        Log log = new Log();
+        log.setName(currentUser.getName());
+        log.setEmail(currentUser.getEmail());
+        log.setDate(LocalDateTime.now());
+        log.setAction("add comment on  Clearance code:"+clearance.getCode());
+        logRepository.save(log);
+
         return "redirect:/clearance-view?code=" + clearanceCode;
     }
 
@@ -475,6 +491,16 @@ public class ClearanceController {
 
         clearanceRepository.save(clearance);
         redirectAttributes.addFlashAttribute("success", "Your approval has been recorded.");
+
+
+        Log log = new Log();
+        log.setName(currentUser.getName());
+        log.setEmail(currentUser.getEmail());
+        log.setDate(LocalDateTime.now());
+        log.setAction("approved for  Clearance code:"+clearance.getCode());
+        logRepository.save(log);
+
+
         return "redirect:/clearance-view?code=" + clearanceCode;
     }
 

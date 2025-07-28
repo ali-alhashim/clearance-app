@@ -50,7 +50,11 @@
                 <a class="badge" th:href="@{/clearance-view(code=${clearance.code})}" th:text="${clearance.code}"></a>
             </td>
 
-            <td th:text="${clearance.name}"></td>
+            <td>
+               <span th:text="${clearance.arName}"></span>
+                <br/>
+                <span th:text="${clearance.name}"></span>
+            </td>
             <td th:text="${clearance.badgeNumber}"></td>
 
             <td th:text="${clearance.approvalStatusText}"></td>
