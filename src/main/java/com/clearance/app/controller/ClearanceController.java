@@ -326,6 +326,14 @@ public class ClearanceController {
         clearance.setCreatedAt(LocalDateTime.now());
         clearance.setCode(clearanceService.generateNextClearanceCode());
         clearance.setLastWorkingDate(clearanceDto.getLastWorkingDate());
+
+        //what if the employee contractStart LocalDate empty
+        if (employee.getContractStart() != null)
+        {
+            clearance.setContractStart(employee.getContractStart());
+        }
+
+        clearance.setNationality(employee.getNationality());
         clearance.setArName(employee.getArName());
         clearance.setCreatedByUserEmail(currentUserEmail);
         clearance.setDepartment(employee.getDepartment());

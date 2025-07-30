@@ -19,6 +19,8 @@ public class Clearance {
     private String code;
 
     private LocalDate lastWorkingDate;
+    private LocalDate contractStart;
+    private String nationality;
 
     private String badgeNumber; //the employee exit from the company
     private String name;
@@ -179,5 +181,21 @@ public class Clearance {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public LocalDate getContractStart() {
+        return contractStart;
+    }
+
+    public String getNationality() {
+        return nationality;
+    }
+
+    public void setContractStart(LocalDate contractStart) {
+        this.contractStart = contractStart;
+    }
+
+    public void setNationality(String nationality) {
+        this.nationality = nationality;
     }
 }

@@ -18,7 +18,9 @@
             <div class="info-block">
                 <p><strong>Employee:</strong> <span th:text="${clearance.name}">Employee Name</span> - <span th:text="${clearance.arName}"></span></p>
                 <p><strong>Badge:</strong> <span th:text="${clearance.badgeNumber}">Badge</span></p>
+                <p><strong>Nationality:</strong> <span th:text="${clearance.nationality}">nationality</span></p>
                 <p><strong>Department:</strong> <span th:text="${clearance.department}">Dept</span></p>
+                <p><strong>Contract Start Date:</strong> <span th:text="${clearance.contractStart}">contractStart</span></p>
                 <p><strong>Last Working Date:</strong> <span th:text="${clearance.lastWorkingDate}">lastWorkingDate</span></p>
                 <p><strong>Job Title:</strong> <span th:text="${clearance.jobTitle}">Job</span></p>
                 <p><strong>Created:</strong> <span th:text="${#temporals.format(clearance.createdAt, 'yyyy-MM-dd HH:mm')}">Date</span></p>

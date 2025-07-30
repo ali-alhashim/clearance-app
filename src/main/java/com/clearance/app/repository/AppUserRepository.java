@@ -13,8 +13,15 @@ import org.springframework.data.repository.query.Param;
 
 public interface AppUserRepository extends MongoRepository<AppUser, String> {
 
-    @Query("{ 'email': { $regex: ?0, $options: 'i' } }")
-    Optional<AppUser> findByEmailIgnoreCase(String email);
+      @Query("{ 'email': { $regex: '^?0$', $options: 'i' } }")
+    Optional<AppUser> findByEmailIgnoreCaseInternal(String email);
+
+    default Optional<AppUser> findByEmailIgnoreCase(String email) {
+        if (email == null || email.trim().isEmpty()) {
+            return Optional.empty(); // skip query for empty email
+        }
+        return findByEmailIgnoreCaseInternal(email);
+    }
 
     List<AppUser> findByRole(String role);
 
